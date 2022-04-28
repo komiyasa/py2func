@@ -51,6 +51,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     blob_service_client = BlockBlobService(account_name=accountname, account_key=accountkey)
     # 分析画像ファイル取得
     img_file_name = req.params.get('filename')
+    logging.info(f'filename={img_file_name}')
     img_in_path = os.path.expanduser("~/input")
     if not os.path.exists(img_in_path):
                 os.makedirs(os.path.expanduser("~/input"))
@@ -77,11 +78,13 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     result_list_fname = os.path.splitext(os.path.basename(img_file_path))[0] + '_result_list.csv'
     result_list_path = os.path.join(img_out_path, result_list_fname)
     print(result_list_path)
+    logging.info(f'result_list_path={result_list_path}')
 
     # Custom Vision Object Detection: 締結装置検知モデルの呼び出し
     response = requests.post(url, data=open(img_file_path,"rb"), headers=headers)
     print(response.status_code)
     print(response.elapsed)
+    logging.info(f'status_code={response.status_code}, elapsed={response.elapsed}')
     result = response.json()
 
     for i, fastener in enumerate(result["predictions"]): 
@@ -113,6 +116,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             print("*****")
             print(out_fname)
             print(response_class.json())
+            logging.info(f'out_fname={out_fname}, json={response_class.json()}')
             result_class = response_class.json()
 
             # 分類モデルの判定を記録
