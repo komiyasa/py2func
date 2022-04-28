@@ -84,7 +84,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     response = requests.post(url, data=open(img_file_path,"rb"), headers=headers)
     print(response.status_code)
     print(response.elapsed)
-    logging.info(f'status_code={response.status_code}, elapsed={response.elapsed}')
+    logging.info(f'status_code={response.status_code}, elapsed={response.elapsed}, response={response.json()}')
     result = response.json()
 
     for i, fastener in enumerate(result["predictions"]): 
